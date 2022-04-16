@@ -1,0 +1,12 @@
+Send Request
+POST http://localhost:4040/authenticate/login
+Content-Type: application/json
+
+{
+"userID": "tati",
+"password": "123"
+}
+###
+Send Request
+POST http://localhost:4040/authenticate/loginbasic
+Authorization: Basic dGF0aToxMjM-

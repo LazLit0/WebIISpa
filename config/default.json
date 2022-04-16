@@ -1,11 +1,11 @@
 {
     "session": {
-        "tokenKey": "djghhhhuuwiwwuewieuwieuriwu",
+        "tokenKey": "djghhhhuuwiwuewieuwieuriwu",
         "timeout": 300
     },
     "db": {
         "dbConfigOptions": {
-            "usedNewUrlParser": true,
+            "useNewUrlParser": true,
             "useUnifiedTopology": true
         },
         "connectionString": "mongodb://localhost/TestDB"

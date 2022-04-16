@@ -6,6 +6,7 @@ let _db;
 const connectionString = config.get("db.connectionString");
 
 function initDB(callback) {
+  console.log(_db);
   if (_db) {
     if (callback) {
       return callback(null, _db);
@@ -13,11 +14,7 @@ function initDB(callback) {
       return _db;
     }
   } else {
-    mongoose.connect(connectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    mongoose.connect(connectionString, {});
     _db = mongoose.connection;
 
     _db.on("error", console.error.bind(console, "connection error:"));
@@ -29,3 +26,12 @@ function initDB(callback) {
     });
   }
 }
+
+function getDb() {
+  return _db;
+}
+
+module.exports = {
+  getDb,
+  initDB,
+};

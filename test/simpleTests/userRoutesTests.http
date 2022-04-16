@@ -1,5 +1,2 @@
 Send Request
-GET http://localhost:7080
-###
-Send Request
-GET http://localhost:7080/user
+GET http://localhost:5050/user
