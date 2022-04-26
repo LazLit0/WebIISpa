@@ -16,15 +16,14 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.put("/", function (req, res, next) {
-  userService.createUser(function (err, result) {
-    console.log("Result: " + result);
+router.post("/", function (request, response, next) {
+  console.log("bin in POST");
+  userService.createUser(request, function (err, result) {
     if (result) {
-      res.send(Object.values(result));
+      response.send(result);
     } else {
-      res.send("Es gab Probleme");
+      response.send("Es gab Probleme");
     }
   });
 });
-
 module.exports = router;

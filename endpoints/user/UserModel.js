@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 
 const UserSchema = new mongoose.Schema(
   {
-    id: Number,
     userID: { type: String, unique: true },
     userName: String,
     email: String,
@@ -27,7 +26,7 @@ UserSchema.pre(
     var user = this;
 
     console.log(
-      "Pre-save: " + this.password + " change: " + this.isModifed("password")
+      "Pre-save: " + this.password + " change: " + this.isModified("password")
     );
 
     if (!user.isModified("password")) {

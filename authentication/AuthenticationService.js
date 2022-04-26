@@ -1,4 +1,4 @@
-var userService = require("../endpoints/user/UserService");
+var userService = require("../endpoints/publicUsers/UserService");
 var jwt = require("jsonwebtoken");
 var config = require("config");
 

@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const database = require("./database/db");
 const testRoutes = require("./endpoints/test/TestRoutes");
 const userRoutes = require("./endpoints/user/UserRoute");
-const authenticationRoutes = require("./authentication/AuthenticationRoute");
+const publicUsers = require("./endpoints/user/publicUserRoute");
+// const authenticationRoutes = require("./authentication/AuthenticationRoute");
 const app = express();
 app.use(bodyParser.json());
 
@@ -11,7 +12,8 @@ app.use(bodyParser.json());
 
 app.use("/", testRoutes);
 app.use("/user", userRoutes);
-app.use("/authenticate", authenticationRoutes);
+app.use("/publicUsers", publicUsers);
+// app.use("/authenticate", authenticationRoutes);
 
 database.initDB(function (err, db) {
   console.log(database);
@@ -21,7 +23,7 @@ database.initDB(function (err, db) {
     console.log("Anbindung von Datenbank gescheitert");
   }
 });
-const port = 4040;
+const port = 8080;
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
