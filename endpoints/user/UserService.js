@@ -77,7 +77,10 @@ function findUserBy(searchUserID, callback) {
   }
 }
 function updateUser(req, callback) {
-  var query = User.findOne({ userID: req.params.userID });
+  var query = User.findOne(req.params.userID, function(err) {
+    console.log('Konnte User nicht finden ' + err);
+  });
+  console.log("DAS IST JETZT QUERY" + query);
 
   query.exec(function (err, user) {
     if (err) {
@@ -88,17 +91,46 @@ function updateUser(req, callback) {
         user.save(function (err) {
           if (err) {
             console.log("Fehler: " + err);
+            callback("could not update User", null);
           } else {
             console.log("Updated User");
+            callback(null, user);
           }
         });
       }
     }
   });
 }
+
+function deleteUser(req, callback) {
+  var query = findUserBy(req.params.userID, function(err, result) {
+    if(err){
+    console.log("Gab ein Fehler beim Suchen des Users" + err);
+    callback(err, null);
+    } else {
+      if(result){
+        User.deleteOne({ userID: req.params.userID }, function(err, result){
+          if(err){
+            callback(err, null);
+          } else {
+            if (result){
+              console.log(`User mit UserID: ${req.params.userID} deleted`);
+              callback(null, result);
+            }
+          }
+        })
+      } else {
+        callback(null, null);
+      }
+    }
+  });
+  
+}
+
 module.exports = {
   getUsers,
   findUserBy,
   createUser,
   updateUser,
+  deleteUser
 };
