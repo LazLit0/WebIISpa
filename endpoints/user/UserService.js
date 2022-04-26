@@ -76,30 +76,42 @@ function findUserBy(searchUserID, callback) {
     });
   }
 }
-function updateUser(req, callback) {
-  var query = User.findOne(req.params.userID, function(err) {
-    console.log('Konnte User nicht finden ' + err);
-  });
-  console.log("DAS IST JETZT QUERY" + query);
+// function updateUser(req, callback) {
+//   var query = findUserBy(req.params.userID, function(err) {
+//     console.log('Konnte User nicht finden ' + err);
+//   });
+//   console.log("DAS IST JETZT QUERY" + query);
 
-  query.exec(function (err, user) {
-    if (err) {
-      console.log("Fehler beim updaten: " + err);
+//   query.exec(function (err, user) {
+//     if (err) {
+//       console.log("Fehler beim updaten: " + err);
+//     } else {
+//       if (user) {
+//         Object.assign(user, { password: "Manfred" });
+//         user.save(function (err) {
+//           if (err) {
+//             console.log("Fehler: " + err);
+//             callback("could not update User", null);
+//           } else {
+//             console.log("Updated User");
+//             callback(null, user);
+//           }
+//         });
+//       }
+//     }
+//   });
+// }
+
+function updateUser(req, callback){
+  console.log(req.body);
+  User.updateOne({ userID: req.params.userID }, req.body, function (err, result){
+    if(err){
+      callback(err, null);
     } else {
-      if (user) {
-        Object.assign(user, { password: "Manfred" });
-        user.save(function (err) {
-          if (err) {
-            console.log("Fehler: " + err);
-            callback("could not update User", null);
-          } else {
-            console.log("Updated User");
-            callback(null, user);
-          }
-        });
-      }
+      console.log(result);
+      callback(null, result);
     }
-  });
+  })
 }
 
 function deleteUser(req, callback) {

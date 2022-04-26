@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema(
     image: String,
     isAdministrator: { type: Boolean, default: false },
   },
-  { timestamp: true }
 );
 
 UserSchema.methods.whoAmI = function () {
@@ -37,9 +36,6 @@ UserSchema.pre(
       next();
     });
   },
-  function (err) {
-    next(err);
-  }
 );
 
 UserSchema.methods.comparePassword = function (candidatePassword, next) {

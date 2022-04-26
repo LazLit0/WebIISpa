@@ -32,9 +32,12 @@ router.post("/", function (request, response, next) {
   console.log("bin in POST");
   userService.createUser(request, function (err, result) {
     if (result) {
-      response.send(result);
+      // response.send(result);
+      console.log(result);
+      response.status(201).json(result);
     } else {
-      response.send("Es gab Probleme");
+      // response.send("Es gab Probleme");
+      response.status(400).json({"Error": "Konnte den User nicht anlegen"});
     }
   });
 });
