@@ -21,6 +21,7 @@ function createUser(request, callback) {
       password: request.body.password,
       isAdministrator: request.body.isAdministrator
     });
+
     console.log("Das ist der user: " + user);
     user.save(function (err, result) {
       if (err) {
@@ -31,7 +32,9 @@ function createUser(request, callback) {
         return callback(null, user);
       }
     });
+
 }
+
 function findUserBy(searchUserID, callback) {
   console.log("UserService: find User by ID: " + searchUserID);
 
@@ -76,31 +79,6 @@ function findUserBy(searchUserID, callback) {
     });
   }
 }
-// function updateUser(req, callback) {
-//   var query = findUserBy(req.params.userID, function(err) {
-//     console.log('Konnte User nicht finden ' + err);
-//   });
-//   console.log("DAS IST JETZT QUERY" + query);
-
-//   query.exec(function (err, user) {
-//     if (err) {
-//       console.log("Fehler beim updaten: " + err);
-//     } else {
-//       if (user) {
-//         Object.assign(user, { password: "Manfred" });
-//         user.save(function (err) {
-//           if (err) {
-//             console.log("Fehler: " + err);
-//             callback("could not update User", null);
-//           } else {
-//             console.log("Updated User");
-//             callback(null, user);
-//           }
-//         });
-//       }
-//     }
-//   });
-// }
 
 function updateUser(req, callback){
   console.log(req.body);

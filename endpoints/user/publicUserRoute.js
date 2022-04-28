@@ -1,4 +1,3 @@
-// alles rein was mit http zu tun hat und den request und response objekten zu tun hat
 var express = require("express");
 var router = express.Router();
 
@@ -32,11 +31,9 @@ router.post("/", function (request, response, next) {
   console.log("bin in POST");
   userService.createUser(request, function (err, result) {
     if (result) {
-      // response.send(result);
       console.log(result);
       response.status(201).json(result);
     } else {
-      // response.send("Es gab Probleme");
       response.status(400).json({"Error": "Konnte den User nicht anlegen"});
     }
   });
