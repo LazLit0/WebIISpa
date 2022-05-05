@@ -9,9 +9,9 @@ router.get("/", function (req, res, next) {
   userService.getUsers(function (err, result) {
     console.log("Result: " + result);
     if (result) {
-      res.send(Object.values(result));
+      res.json(result);
     } else {
-      res.send("Es gab probleme");
+      res.json({"Error":"Es gab probleme"});
     }
   });
 });
@@ -31,9 +31,9 @@ router.get("/admin", function (req, res, next) {
   userService.getUsers(function (err, result){
     console.log("Result: " + result);
     if (result) {
-      res.send(Object.values(result));
+      res.json(result);
     } else {
-      res.send("Es gab Probleme");
+      res.json({"Error":"Es gab Probleme"});
     }
   });
 });

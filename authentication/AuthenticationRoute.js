@@ -16,16 +16,16 @@ router.get("/", function (req, res, next) {
           const { id, userID, userName, ...partialObject } = user;
           const subset = { id, userID, userName };
           console.log(JSON.stringify(subset));
-          res.send(subset);
+          res.json(subset);
         } else {
           console.log(
             "User is null, even though a token has been created. Error: " + err
           );
-          res.send("Could create token");
+          res.json({"Acknowledge":"Could create token"});
         }
       } else {
         console.log("Token has not been created, Error: " + err);
-        res.send("Could not create token");
+        res.json({"Error":"Could not create token"});
       }
     }
   );
