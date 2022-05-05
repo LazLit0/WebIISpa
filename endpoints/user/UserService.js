@@ -12,14 +12,27 @@ function getUsers(callback) {
     }
   });
 }
-function createUser(request, callback) {
+
+function getOneUser(userID, callback){
+  findUserBy(userID, function(err, user) {
+    if(err){
+      console.log("Fehler bei Suche: " + err);
+      return callback(err, null); 
+    } else {
+      console.log("Alles super");
+      return callback(null, user);
+    }
+  })
+}
+
+function createUser(body, callback) {
   console.log("bin in CREATE USER");
  
     var user = new User({
-      userID: request.body.userID,
-      userName: request.body.userName,
-      password: request.body.password,
-      isAdministrator: request.body.isAdministrator
+      userID: body.userID,
+      userName: body.userName,
+      password: body.password,
+      isAdministrator: body.isAdministrator
     });
 
     console.log("Das ist der user: " + user);
@@ -119,6 +132,7 @@ function deleteUser(req, callback) {
 
 module.exports = {
   getUsers,
+  getOneUser,
   findUserBy,
   createUser,
   updateUser,

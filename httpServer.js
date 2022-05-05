@@ -4,7 +4,9 @@ const database = require("./database/db");
 const testRoutes = require("./endpoints/test/TestRoutes");
 const userRoutes = require("./endpoints/user/UserRoute");
 const publicUsers = require("./endpoints/user/publicUserRoute");
-// const authenticationRoutes = require("./authentication/AuthenticationRoute");
+const userService = require("./endpoints/user/UserService");
+const authenticationRoutes = require("./authentication/AuthenticationRoute");
+const { findOne, findById } = require("./endpoints/user/UserModel");
 const app = express();
 app.use(bodyParser.json());
 
@@ -13,12 +15,13 @@ app.use(bodyParser.json());
 app.use("/", testRoutes);
 app.use("/user", userRoutes);
 app.use("/publicUsers", publicUsers);
-// app.use("/authenticate", authenticationRoutes);
+app.use("/authenticate", authenticationRoutes);
 
 database.initDB(function (err, db) {
   console.log(database);
   if (db) {
     console.log("Anbindung von Datenbank erfolgreich");
+    userService.findUserBy("admin", function(){});
   } else {
     console.log("Anbindung von Datenbank gescheitert");
   }

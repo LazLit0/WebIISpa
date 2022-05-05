@@ -1,14 +1,16 @@
 var express = require("express");
 var router = express.Router();
-var authenticationService = require("./AuthenticationService");
+var authenticationService = require("../authentication/AuthenticationService");
 
-router.post("/login", function (req, res, next) {
+//vorher header base64 auslesen und dann pw und userID übergeben
+router.get("/", function (req, res, next) {
   console.log("Want to create token");
+  console.log("das sind die req.headers: " + req.headers);
   authenticationService.createSessionToken(
-    req.body,
+    req.headers,
     function (err, token, user) {
       if (token) {
-        res.header("Authorization", "Bearer", token);
+        res.header("Authorization", "Bearer");
 
         if (user) {
           const { id, userID, userName, ...partialObject } = user;

@@ -1,21 +1,22 @@
-var userService = require("../endpoints/publicUsers/UserService");
+var userService = require("../endpoints/user/UserService");
 var jwt = require("jsonwebtoken");
 var config = require("config");
 
-function createSessionToken(props, callback) {
+
+function createSessionToken(userID, password, callback) {
   console.log("AuthenticationService: create Token");
 
-  if (!props) {
+  if (!userID) {
     console.log("Error: have no json body");
     callback("JSON-Body missing", null, null);
     return;
   }
 
-  userService.findUserBy(props.userID, function (error, user) {
+  userService.findUserBy(userID, function (error, user) {
     if (user) {
       console.log("Found user, check the password");
 
-      user.comparePassword(props.password, function (err, isMatch) {
+      user.comparePassword(password, function (err, isMatch) {
         if (err) {
           console.log("Password is invalid");
           callback(err, null);
