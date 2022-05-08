@@ -62,7 +62,7 @@ function isAuthenticated(req, res, next) {
     console.log("Das ist der pricateKey: " + privateKey);
     jwt.verify(token, privateKey, (err, authData) => {
       if (err) {
-        res.status(500).json({ error: "Not Authorized" });
+        res.status(401).json({ error: "Not Authorized or token expired" });
         return;
       }
         res.status(200);

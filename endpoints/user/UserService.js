@@ -50,7 +50,9 @@ function createUser(body, callback) {
         return callback(err, null);
       } else {
         console.log("Top, alles super");
-        return callback(null, user);
+        const { id, userID, userName, isAdministrator, ...partialObject } = user;
+        const subset = { id, userID, userName, isAdministrator };
+        return callback(null, subset);
       }
     });
 

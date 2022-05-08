@@ -27,7 +27,7 @@ router.get("/", function (req, res, next) {
         }
       } else {
         console.log("Token has not been created, Error: " + err);
-        res.json({ "Error": "Could not create token" });
+        res.status(400).json({ "Error": "Could not create token" });
       }
     }
   );
