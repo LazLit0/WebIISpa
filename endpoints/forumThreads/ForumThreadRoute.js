@@ -15,9 +15,9 @@ router.get("/", function (req, res, next) {
     });
   });
 
-  router.get("/:forumThreadID", function (req, res, next) {
-      console.log("Das ist die ID: " + req.params.forumThreadID);
-    threadService.getOneForumThread(req.params.forumThreadID, function (err, result) {
+  router.get("/:_id", function (req, res, next) {
+      console.log("Das ist die ID: " + req.params._id);
+    threadService.getOneForumThread(req.params._id, function (err, result) {
       console.log("Result: " + result);
       if (result) {
         res.status(200).json(result);
@@ -27,8 +27,8 @@ router.get("/", function (req, res, next) {
     });
   });
 
-  router.put("/:forumThreadID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
-    threadService.updateThread(req.params.forumThreadID, req.body, function (err, result) {
+  router.put("/:_id", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+    threadService.updateThread(req.params._id, req.body, function (err, result) {
       console.log("Result: " + result);
       if (result) {
         res.json(result);
@@ -55,9 +55,9 @@ router.get("/", function (req, res, next) {
     });
   });
 
-  router.delete("/:forumThreadID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  router.delete("/:_id", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
     console.log("bin in DELETE");
-    threadService.deleteThread(req, function (err, result) {
+    threadService.deleteThread(req.params._id, function (err, result) {
       if (result) {
         res.status(201).json(result);
       } else {

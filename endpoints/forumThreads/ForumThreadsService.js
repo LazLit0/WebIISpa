@@ -29,7 +29,7 @@ function getForumThreads(callback) {
     console.log("bin in CREATE USER");
    
       var thread = new ForumThread({
-        forumThreadID: body.forumThreadID,
+        threadID: body.threadID,
         name: body.name,
         description: body.description
       });
@@ -60,13 +60,14 @@ function getForumThreads(callback) {
   }
 
   function deleteThread(forumThreadID, callback) {
+    console.log("###### Das ist forumThreadID: " + forumThreadID);
     var query = findForumThreadBy(forumThreadID, function(err, result) {
       if(err){
       console.log("Gab ein Fehler beim Suchen des Threads" + err);
       callback(err, null);
       } else {
         if(result){
-          ForumThread.deleteOne({ forumThreadID: req.params.forumThreadID }, function(err, result){
+          ForumThread.deleteOne({ forumThreadID: forumThreadID }, function(err, result){
             if(err){
               callback(err, null);
             } else {
@@ -90,7 +91,7 @@ function getForumThreads(callback) {
       callback("ThreadID is missing");
       return;
     } else {
-      var query = ForumThread.findOne({ forumThreadID: forumThreadID });
+      var query = ForumThread.findOne({ _id: forumThreadID });
       query.exec(function (err, forumThread) {
         if (err) {
           console.log("Did not find THreadID: " + forumThreadID);

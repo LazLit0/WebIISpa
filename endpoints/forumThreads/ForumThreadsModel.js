@@ -2,9 +2,10 @@ var mongoose = require("mongoose");
 
 const ForumThreadSchema = new mongoose.Schema(
     {
-        forumThreadID: { type: String, unique: true},
+        threadID: { type: String, unique: true },
         name: String,
-        description: String
+        description: String,
+        owner: String
     }
 )
 
