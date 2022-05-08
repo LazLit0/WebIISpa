@@ -8,6 +8,12 @@ function getUsers(callback) {
       return callback(err, null);
     } else {
       console.log("Alles super");
+      for (let index = 0; index < users.length; index++) {
+        const element = users[index];
+        const { id, userID, userName, isAdministrator, ...partialObject } = element;
+        const subset = { id, userID, userName, isAdministrator };
+        users[index] = subset; 
+      }
       return callback(null, users);
     }
   });
@@ -20,7 +26,9 @@ function getOneUser(userID, callback){
       return callback(err, null); 
     } else {
       console.log("Alles super");
-      return callback(null, user);
+      const { id, userID, userName, isAdministrator, ...partialObject } = user;
+      const subset = { id, userID, userName, isAdministrator };
+      return callback(null, subset);
     }
   })
 }
@@ -93,9 +101,9 @@ function findUserBy(searchUserID, callback) {
   }
 }
 
-function updateUser(req, callback){
+function updateUser(userID, body, callback){
   console.log(req.body);
-  User.updateOne({ userID: req.params.userID }, req.body, function (err, result){
+  User.updateOne({ userID: userID }, body, function (err, result){
     if(err){
       callback(err, null);
     } else {
@@ -105,8 +113,8 @@ function updateUser(req, callback){
   })
 }
 
-function deleteUser(req, callback) {
-  var query = findUserBy(req.params.userID, function(err, result) {
+function deleteUser(userID, callback) {
+  var query = findUserBy(userID, function(err, result) {
     if(err){
     console.log("Gab ein Fehler beim Suchen des Users" + err);
     callback(err, null);
@@ -117,7 +125,7 @@ function deleteUser(req, callback) {
             callback(err, null);
           } else {
             if (result){
-              console.log(`User mit UserID: ${req.params.userID} deleted`);
+              console.log(`User mit UserID: ${userID} deleted`);
               callback(null, result);
             }
           }

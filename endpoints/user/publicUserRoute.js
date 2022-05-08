@@ -19,7 +19,6 @@ router.get("/", function (req, res, next) {
 
 router.get("/:userID", function (req, res, next) {
   console.log("Bin in GET admin");
-  console.log("DAS IST DIE ID: " + req.params.userID);
   userService.getOneUser(req.params.userID, function (err, result){
     console.log("Result: " + result);
     if (result) {
@@ -42,9 +41,9 @@ router.post("/", function (req, res, next) {
   });
 });
 
-router.put("/:userID", function (request, response, next) {
+router.put("/:userID", function (req, response, next) {
   console.log("bin in PUT");
-  userService.updateUser(request, function (err, result) {
+  userService.updateUser(req.params.userID, req.body, function (err, result) {
     if (result) {
       response.json(result);
     } else {
@@ -55,7 +54,7 @@ router.put("/:userID", function (request, response, next) {
 
 router.delete("/:userID", function (req, res, next) {
   console.log("bin in DELETE");
-  userService.deleteUser(req, function (err, result) {
+  userService.deleteUser(req.params.userID, function (err, result) {
     if (result) {
       res.json(result);
     } else {

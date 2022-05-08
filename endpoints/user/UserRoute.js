@@ -1,73 +1,73 @@
 // alles rein was mit http zu tun hat und den request und response objekten zu tun hat
 var express = require("express");
+const { JsonWebTokenError } = require("../../node_modules/jsonwebtoken/index");
 var router = express.Router();
+var jwt = require("jsonwebtoken");
+var config = require("config");
+var authenticationService = require("../../authentication/AuthenticationService")
 
 var userService = require("./UserService");
 
-router.get("/", function (req, res, next) {
+router.get("/", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
   console.log("Bin in users route");
   userService.getUsers(function (err, result) {
     console.log("Result: " + result);
     if (result) {
-      res.json(result);
+      return res.json(result);
     } else {
-      res.json({"Error":"Es gab probleme"});
+      res.json({ "Error": "Es gab probleme: " + err});
     }
   });
 });
 
-router.put("/", function (req, res, next) {
-  userService.createUser(function (err, result) {
-    console.log("Result: " + result);
-    if (result) {
-      res.json(result);
-    } else {
-      res.json({"Error": "Es gab Probleme"});
-    }
-  });
-});
-router.get("/admin", function (req, res, next) {
+router.get("/:userID",authenticationService.isAuthenticated,authenticationService.isAdmin, function (req, res, next) {
   console.log("Bin in GET admin");
-  userService.getUsers(function (err, result){
+  userService.getOneUser(req.params.userID, function (err, result) {
     console.log("Result: " + result);
     if (result) {
       res.json(result);
     } else {
-      res.json({"Error":"Es gab Probleme"});
+      res.json({ "Error": "Es gab Probleme" });
     }
   });
 });
 
-router.post("/", function (request, response, next) {
+router.put("/:userID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  userService.updateUser(req.params.userID, req.body, function (err, result) {
+    console.log("Result: " + result);
+    if (result) {
+      res.json(result);
+    } else {
+      res.json({ "Error": "Es gab Probleme: " + err});
+    }
+  });
+});
+
+
+router.post("/",authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  if (!req.headers.authorization) {
+    res.statusCode = 401;
+    res.setHeader('WWW-Authenticate', 'Basic realm="Secure Area"');
+    return res.json({ message: 'Missing Authorization Header' });
+  }
   console.log("bin in POST");
-  userService.createUser(request, function (err, result) {
+  userService.createUser(req.body, function (err, result) {
     if (result) {
       console.log(result);
-      response.status(201).json(result);
+      res.status(201).json(result);
     } else {
-      response.status(400).json({"Error": "Konnte den User nicht anlegen"});
+      res.status(400).json({ "Error": "Konnte den User nicht anlegen: " + err });
     }
   });
 });
 
-router.put("/:userID", function (request, response, next) {
-  console.log("bin in PUT");
-  userService.updateUser(request, function (err, result) {
-    if (result) {
-      response.send(result);
-    } else {
-      response.send("Es gab Probleme");
-    }
-  });
-});
-
-router.delete("/:userID", function (req, res, next) {
+router.delete("/:userID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
   console.log("bin in DELETE");
   userService.deleteUser(req, function (err, result) {
     if (result) {
-      res.send(result);
+      res.status(201).json(result);
     } else {
-      res.send("Es gab Probleme");
+      res.status(400).json({ "Error": "Es gab Probleme: " + err });
     }
   })
 })
