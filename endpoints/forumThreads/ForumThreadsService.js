@@ -24,14 +24,29 @@ function getForumThreads(callback) {
       }
     })
   }
+//TODO filter Array for ownerID
+  function getMyForumThreads(ownerID, callback){
+    console.log("Get MY Forum Threads: !!");
+    ForumThread.find(function (err, myForumThreads) {
+      if(err) {
+        console.log("Fehler bei Suche: " + err);
+        return callback(err, null);
+      } else {
+        console.log("Alles super");
+        console.log("Es folgt das Array mit keinem Thread: " + myForumThreads.filter(myForumThreads => myForumThreads.ownerID == ownerID));
+        return callback(null, myForumThreads.filter(myForumThreads => myForumThreads.ownerID == ownerID));
+      }
+    })
+  }
 
-  function createUser(body, callback) {
+  function createThread(userID, body, callback) {
     console.log("bin in CREATE USER");
    
       var thread = new ForumThread({
         threadID: body.threadID,
         name: body.name,
-        description: body.description
+        description: body.description,
+        ownerID: userID
       });
   
       console.log("Das ist der thread: " + thread);
@@ -113,7 +128,8 @@ function getForumThreads(callback) {
   module.exports = {
       getForumThreads,
       getOneForumThread,
-      createUser,
+      createThread,
       updateThread,
-      deleteThread
+      deleteThread,
+      getMyForumThreads
   }

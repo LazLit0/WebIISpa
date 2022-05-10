@@ -5,7 +5,7 @@ const ForumThreadSchema = new mongoose.Schema(
         threadID: { type: String, unique: true },
         name: String,
         description: String,
-        owner: String
+        ownerID: String
     }
 )
 

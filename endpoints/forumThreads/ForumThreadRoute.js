@@ -14,7 +14,17 @@ router.get("/", function (req, res, next) {
       }
     });
   });
-
+  
+  router.get("/myForumThreads", authenticationService.isAuthenticated, function(req, res, next) {
+    threadService.getMyForumThreads(req.params._id, function(err, result) {
+      if(result){
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({error: "Es gab Probleme : " + err});
+      }
+    })
+  })
+  
   router.get("/:_id", function (req, res, next) {
       console.log("Das ist die ID: " + req.params._id);
     threadService.getOneForumThread(req.params._id, function (err, result) {
@@ -26,6 +36,7 @@ router.get("/", function (req, res, next) {
       }
     });
   });
+
 
   router.put("/:_id", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
     threadService.updateThread(req.params._id, req.body, function (err, result) {
@@ -45,7 +56,7 @@ router.get("/", function (req, res, next) {
       return res.json({ message: 'Missing Authorization Header' });
     }
     console.log("bin in POST");
-    threadService.createUser(req.body, function (err, result) {
+    threadService.createThread(req.params.userID, req.body, function (err, result) {
       if (result) {
         console.log(result);
         res.status(201).json(result);

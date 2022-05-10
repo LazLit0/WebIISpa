@@ -2,21 +2,22 @@ const req = require("../../node_modules/express/lib/request");
 const User = require("./UserModel");
 
 function getUsers(callback) {
+
   User.find(function (err, users) {
-    if (err) {
-      console.log("Fehler bei Suche: " + err);
-      return callback(err, null);
-    } else {
-      console.log("Alles super");
-      for (let index = 0; index < users.length; index++) {
-        const element = users[index];
-        const { id, userID, userName, isAdministrator, ...partialObject } = element;
-        const subset = { id, userID, userName, isAdministrator };
-        users[index] = subset; 
+        if (err) {
+          console.log("Fehler bei Suche: " + err);
+          return callback(err, null);
+        } else {
+          console.log("Alles super");
+          for (let index = 0; index < users.length; index++) {
+            const element = users[index];
+            const { id, userID, userName, isAdministrator, ...partialObject } = element;
+            const subset = { id, userID, userName, isAdministrator };
+            users[index] = subset; 
+          }
+          return callback(null, users);
       }
-      return callback(null, users);
-    }
-  });
+})
 }
 
 function getOneUser(userID, callback){
@@ -73,7 +74,7 @@ function findUserBy(searchUserID, callback) {
       } else {
         if (user) {
           console.log(`Found userID: ${searchUserID}`);
-          callback(null, user);
+          return callback(null, user);
         } else {
           if (`admin` == searchUserID) {
             console.log(

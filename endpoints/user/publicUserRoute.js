@@ -7,12 +7,18 @@ var userService = require("./UserService");
 
 router.get("/", function (req, res, next) {
   console.log("Bin in users route");
+  userService.findUserBy("admin", function(err) {
+    if(err){
+      res.status(400).json({error: err});
+      return;
+    }
+  });
   userService.getUsers(function (err, result) {
     console.log("Result: " + result);
     if (result) {
-      res.json(result);
+      res.status(200).json(result);
     } else {
-      res.json({"Error": "Es gab probleme"});
+      res.status(400).json({"Error": "Es gab probleme"});
     }
   });
 });
