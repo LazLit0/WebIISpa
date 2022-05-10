@@ -28,7 +28,7 @@ function createSessionToken(userID, password, callback) {
             var expirationTime = config.get("session.timeout");
             var expiresAt = 300;
             var privateKey = config.get("session.tokenKey");
-            let token = jwt.sign({ user: user.userID }, privateKey, {
+            let token = jwt.sign({ user: user.userID, isAdministrator: user.isAdministrator, userID: user._id }, privateKey, {
               expiresIn: expiresAt,
               algorithm: "HS256"
             });
@@ -67,7 +67,6 @@ function isAuthenticated(req, res, next) {
       }
         res.status(200);
         req.token = token;
-        authData;
         next();
       });
       
@@ -84,11 +83,8 @@ function isAuthenticated(req, res, next) {
       }
 
       function isAdmin(req,res,next) {
-        var privateKey = config.get('session.tokenKey');
-        var payload = jwt.verify(req.token, privateKey) 
-        console.log("Das ist der PAYLOAD: " + JSON.stringify(payload));
-        console.log("Das ist payloaduser: " + payload.user);
-        userService.findUserBy(payload.user, (err, user) => {
+        const credentials = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
+        userService.findUserBy(credentials.user, (err, user) => {
           if(err){
             res.status(500).json({error: "No User with this ID"});
             return;

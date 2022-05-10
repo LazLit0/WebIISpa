@@ -63,7 +63,7 @@ router.post("/",authenticationService.isAuthenticated, authenticationService.isA
 
 router.delete("/:userID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
   console.log("bin in DELETE");
-  userService.deleteUser(req, function (err, result) {
+  userService.deleteUser(req.params.userID, function (err, result) {
     if (result) {
       res.status(201).json(result);
     } else {

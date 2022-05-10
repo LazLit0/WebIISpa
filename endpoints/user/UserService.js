@@ -123,7 +123,7 @@ function deleteUser(userID, callback) {
     callback(err, null);
     } else {
       if(result){
-        User.deleteOne({ userID: req.params.userID }, function(err, result){
+        User.deleteOne({ userID: userID }, function(err, result){
           if(err){
             callback(err, null);
           } else {

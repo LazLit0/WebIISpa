@@ -24,7 +24,7 @@ function getForumThreads(callback) {
       }
     })
   }
-//TODO filter Array for ownerID
+
   function getMyForumThreads(ownerID, callback){
     console.log("Get MY Forum Threads: !!");
     ForumThread.find(function (err, myForumThreads) {
@@ -33,14 +33,13 @@ function getForumThreads(callback) {
         return callback(err, null);
       } else {
         console.log("Alles super");
-        console.log("Es folgt das Array mit keinem Thread: " + myForumThreads.filter(myForumThreads => myForumThreads.ownerID == ownerID));
         return callback(null, myForumThreads.filter(myForumThreads => myForumThreads.ownerID == ownerID));
       }
     })
   }
 
   function createThread(userID, body, callback) {
-    console.log("bin in CREATE USER");
+    console.log("bin in CREATE THREAD");
    
       var thread = new ForumThread({
         threadID: body.threadID,
@@ -82,7 +81,7 @@ function getForumThreads(callback) {
       callback(err, null);
       } else {
         if(result){
-          ForumThread.deleteOne({ forumThreadID: forumThreadID }, function(err, result){
+          ForumThread.deleteOne({ _id: forumThreadID }, function(err, result){
             if(err){
               callback(err, null);
             } else {

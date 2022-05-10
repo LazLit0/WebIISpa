@@ -86,11 +86,17 @@ Content-Type: application/json
 
 ### Auflisten der Foren des aktuellen users
 GET http://localhost:8080/forumThreads/myForumThreads
-Authorization: {adminToken}}
+Authorization: {{adminToken}}
+
+### Auflisten der Foren des aktuellen users
+GET http://localhost:8080/forumThreads/myForumThreads
+Authorization: {{manfredToken}}
 
 ### Auflisten der Foren einen bestimmten user
 GET http://localhost:8080/forumThreads?ownerID=manfred
 
+### Auflisten der Foren des admins
+GET http://localhost:8080/forumThreads?ownerID=admin
 
 ### Lösche den angelegten Forum-Thread
 DELETE http://localhost:8080/forumThreads/{{forumThreadID}}
