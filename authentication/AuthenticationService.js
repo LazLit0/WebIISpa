@@ -57,51 +57,56 @@ function isAuthenticated(req, res, next) {
 
   if (typeof req.headers.authorization !== "undefined") {
     let token = req.headers.authorization.split(" ")[1];
-    console.log("Das ist der token: " + token);
     var privateKey = config.get('session.tokenKey');
-    console.log("Das ist der pricateKey: " + privateKey);
     jwt.verify(token, privateKey, (err, authData) => {
       if (err) {
         res.status(401).json({ error: "Not Authorized or token expired" });
         return;
       }
-        res.status(200);
-        req.token = token;
-        next();
-      });
-      
-      // const nowUnixSeconds = Math.round(Number(new Date())/1000);
-      // if(payload.exp - nowUnixSeconds > 30){
-      //      res.status(400).end();
-      //      return next();
-      //   }
-      //   const newToken = jwt.sign({username: payload.user},privateKey,{
-      //         algorithm:'HS256',
-      //         expiresIn: 300
-      //     });
-        }
-      }
+      res.status(200);
+      req.token = token;
+      next();
+    });
 
-      function isAdmin(req,res,next) {
-        const credentials = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
-        userService.findUserBy(credentials.user, (err, user) => {
-          if(err){
-            res.status(500).json({error: "No User with this ID"});
-            return;
-          } else {
-              console.log("Das uist User admin attribut: " + user.isAdministrator);
-              if(user.isAdministrator){
-                res.status(200);
-                next();
-              } else {
-                res.status(401).json({error: "You need to be admin"});
-                return;
-              }
-          }
-        });
+  }
+
+}
+  function checkExpirationDate(req, res, next) {
+    const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
+    let user = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
+    let privateKey = config.get('session.tokenKey');
+    if (user.exp - nowUnixSeconds > 30) {
+      return next();
+    }
+    req.token = jwt.sign({ user: user.userID, isAdministrator: user.isAdministrator, userID: user._id }, privateKey, {
+      algorithm: 'HS256',
+      expiresIn: 300
+    });
+    console.log("TOKEN RENEWED");
+    return next();
+  }
+
+function isAdmin(req, res, next) {
+  const credentials = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
+  userService.findUserBy(credentials.user, (err, user) => {
+    if (err) {
+      res.status(500).json({ error: "No User with this ID" });
+      return;
+    } else {
+      console.log("Das uist User admin attribut: " + user.isAdministrator);
+      if (user.isAdministrator) {
+        res.status(200);
+        next();
+      } else {
+        res.status(401).json({ error: "You need to be admin" });
+        return;
       }
+    }
+  });
+}
 module.exports = {
   createSessionToken,
   isAuthenticated,
-  isAdmin
+  isAdmin,
+  checkExpirationDate
 };

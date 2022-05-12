@@ -42,7 +42,6 @@ function getForumThreads(callback) {
     console.log("bin in CREATE THREAD");
    
       var thread = new ForumThread({
-        threadID: body.threadID,
         name: body.name,
         description: body.description,
         ownerID: userID

@@ -8,7 +8,7 @@ var authenticationService = require("../../authentication/AuthenticationService"
 
 var userService = require("./UserService");
 
-router.get("/", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+router.get("/", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
   console.log("Bin in users route");
   userService.getUsers(function (err, result) {
     console.log("Result: " + result);
@@ -20,7 +20,7 @@ router.get("/", authenticationService.isAuthenticated, authenticationService.isA
   });
 });
 
-router.get("/:userID",authenticationService.isAuthenticated,authenticationService.isAdmin, function (req, res, next) {
+router.get("/:userID",authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
   console.log("Bin in GET admin");
   userService.getOneUser(req.params.userID, function (err, result) {
     console.log("Result: " + result);
@@ -32,7 +32,7 @@ router.get("/:userID",authenticationService.isAuthenticated,authenticationServic
   });
 });
 
-router.put("/:userID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+router.put("/:userID", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
   userService.updateUser(req.params.userID, req.body, function (err, result) {
     console.log("Result: " + result);
     if (result) {
@@ -44,7 +44,7 @@ router.put("/:userID", authenticationService.isAuthenticated, authenticationServ
 });
 
 
-router.post("/",authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+router.post("/",authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
   if (!req.headers.authorization) {
     res.statusCode = 401;
     res.setHeader('WWW-Authenticate', 'Basic realm="Secure Area"');
@@ -61,7 +61,7 @@ router.post("/",authenticationService.isAuthenticated, authenticationService.isA
   });
 });
 
-router.delete("/:userID", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+router.delete("/:userID", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
   console.log("bin in DELETE");
   userService.deleteUser(req.params.userID, function (err, result) {
     if (result) {

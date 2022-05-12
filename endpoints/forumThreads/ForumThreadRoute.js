@@ -28,7 +28,7 @@ console.log("WERT VON REQ>QUERY:   " + bool);
   }
   });
   
-  router.get("/myForumThreads", authenticationService.isAuthenticated, function(req, res, next) {
+  router.get("/myForumThreads", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, function(req, res, next) {
     const credentials = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
     threadService.getMyForumThreads(credentials.user, function(err, result) {
       if(result){
@@ -52,22 +52,21 @@ console.log("WERT VON REQ>QUERY:   " + bool);
   });
 
 
-  router.put("/:_id", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  router.put("/:_id", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
     threadService.updateThread(req.params._id, req.body, function (err, result) {
       console.log("Result: " + result);
       if (result) {
-        res.json(result);
+        res.status(200).json(result);
       } else {
-        res.json({ "Error": "Es gab Probleme: " + err});
+        res.status(400).json({ "Error": "Es gab Probleme: " + err});
       }
     });
   });
 
-  router.post("/",authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  router.post("/",authenticationService.isAuthenticated, authenticationService.checkExpirationDate, function (req, res, next) {
     if (!req.headers.authorization) {
-      res.statusCode = 401;
       res.setHeader('WWW-Authenticate', 'Basic realm="Secure Area"');
-      return res.json({ message: 'Missing Authorization Header' });
+      return res.status(401).json({ message: 'Missing Authorization Header' });
     }
     console.log("bin in POST");
     const credentials = JSON.parse(Buffer.from(req.token.split(".")[1], 'base64').toString('ascii'));
@@ -76,12 +75,12 @@ console.log("WERT VON REQ>QUERY:   " + bool);
         console.log(result);
         res.status(201).json(result);
       } else {
-        res.status(400).json({ "Error": "Konnte den User nicht anlegen: " + err });
+        res.status(400).json({ error: "Konnte den Thread nicht anlegen: " + err });
       }
     });
   });
 
-  router.delete("/:_id", authenticationService.isAuthenticated, authenticationService.isAdmin, function (req, res, next) {
+  router.delete("/:_id", authenticationService.isAuthenticated, authenticationService.checkExpirationDate, authenticationService.isAdmin, function (req, res, next) {
     console.log("bin in DELETE");
     threadService.deleteThread(req.params._id, function (err, result) {
       if (result) {
