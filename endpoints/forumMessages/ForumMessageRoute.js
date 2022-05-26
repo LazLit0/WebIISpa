@@ -7,7 +7,7 @@ router.get("/", function (req, res, next) {
     console.log("Bin in Forum-Thread-Message Route");
     var bool = req.query.forumThreadID;
     console.log("WERT VON REQ>QUERY:   " + bool);
-    if (req.query.forumThreadID) {
+    if (req.query.forumThreadID != undefined) {
         console.log("GIBT EINE QUERy");
         forumMessageService.getForumThreadMessages(req.query.forumThreadID, function (err, result) {
             if (result) {
@@ -17,7 +17,7 @@ router.get("/", function (req, res, next) {
             }
         })
     } else {
-        forumMessageService.getForumThreadMessages(function (err, result) {
+        forumMessageService.getForumMessages(function (err, result) {
             console.log("Result: " + result);
             if (result) {
                 return res.status(200).json(result);

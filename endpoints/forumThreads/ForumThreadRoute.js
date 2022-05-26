@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var authenticationService = require("../../authentication/AuthenticationService")
 var threadService = require("./ForumThreadsService");
+var messageService = require("../forumMessages/ForumMessageService")
 
 router.get("/", function (req, res, next) {
     console.log("Bin in users route");
@@ -52,7 +53,15 @@ console.log("WERT VON REQ>QUERY:   " + bool);
   });
 
   router.get("/:_id/forumMessages", function (req, res, next) {
-    console.log("Das ist ID");
+    console.log("Das ist ID" + req.params._id);
+    messageService.getForumThreadMessages(req.params._id, function(err, result){
+      console.log("Result: " + result);
+      if(result){
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({ error: "Es gab Probleme " + err});
+      }
+    })
   })
 
 

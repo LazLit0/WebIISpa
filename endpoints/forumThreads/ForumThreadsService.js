@@ -74,7 +74,7 @@ function getForumThreads(callback) {
 
   function deleteThread(forumThreadID, callback) {
     console.log("###### Das ist forumThreadID: " + forumThreadID);
-    var query = findForumThreadBy(forumThreadID, function(err, result) {
+    findForumThreadBy(forumThreadID, function(err, result) {
       if(err){
       console.log("Gab ein Fehler beim Suchen des Threads" + err);
       callback(err, null);
